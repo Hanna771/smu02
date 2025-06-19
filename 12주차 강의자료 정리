@@ -1,0 +1,140 @@
+## 🧑‍💻 12주차 - VSCode 설치 & Git 실습 총정리
+
+> Ubuntu에서 VSCode 설치부터 Git 설정, 브랜치 변경, 마크다운 예쁘게 꾸미는 방법까지  
+> 실무에 유용한 명령어와 GitHub README 꾸미기까지 한 번에 정리!
+
+---
+
+### 🧰 12.1 - VSCode 설치 방법 (Ubuntu)
+
+#### 📦 방법 1: Snap으로 설치
+
+```bash
+$ sudo snap install --classic code
+```
+
+#### 🌐 방법 2: Microsoft 공식 APT 저장소 사용
+
+```bash
+$ sudo apt update
+$ sudo apt install software-properties-common apt-transport-https wget
+$ wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
+$ sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+$ sudo apt update
+$ sudo apt install code
+```
+
+#### 📁 방법 3: `.deb` 파일 직접 설치
+
+```bash
+$ sudo apt install ./code_x.xx.x_amd64.deb
+```
+
+---
+
+### ⚙️ 12.2 - VSCode 설정 및 확장 기능
+
+#### 🛠️ `settings.json` 설정 예시
+
+```json
+{
+  "editor.mouseWheelZoom": true,
+  "editor.fontFamily": "D2Coding, NanumGothicCoding",
+  "editor.renderWhitespace": "all",
+  "editor.insertSpaces": false,
+  "editor.minimap.enabled": false,
+  "terminal.integrated.cursorBlinking": true,
+  "window.zoomLevel": 2,
+  "git.autofetch": true
+}
+```
+
+#### 🎨 추천 확장 기능
+
+| 이름 | 설명 |
+|------|------|
+| Project Manager | 프로젝트 관리 |
+| Markdown All in One | 마크다운 편집 |
+| emojisense | 이모지 자동완성 |
+| Excel to Markdown Table | 표 변환 |
+| Draw.io Integration | 다이어그램 생성 |
+
+---
+
+### 📘 12.3 - Git 기본 명령어
+
+#### ⚙️ Git 초기 설정
+
+```bash
+$ git config --global user.name "your_name"
+$ git config --global user.email "your_email@example.com"
+$ git config --global core.editor "code --wait"
+```
+
+#### 🔧 Git 명령어 요약
+
+```bash
+$ git init
+$ git status
+$ git add .
+$ git commit -m "first commit"
+$ git log
+$ git branch
+$ git checkout -b feature
+$ git merge feature
+```
+
+---
+
+### 🔄 12.4 - Git 브랜치 이름 변경
+
+#### 💡 defaultBranch를 main으로 설정
+
+```bash
+$ git config --global init.defaultBranch main
+```
+
+#### 기존 브랜치 이름 바꾸기
+
+```bash
+$ git branch -m master main
+```
+
+#### GitHub로 푸시 시
+
+```bash
+$ git branch -M main
+$ git remote add origin https://github.com/username/repo.git
+$ git push -u origin main
+```
+
+---
+
+### 🪧 12.5 - Markdown + Badge 꾸미기
+
+#### 📝 마크다운 테이블 예시
+
+| 이름 | 과목 | 점수 |
+|------|------|------|
+| smart01 | 수학 | 88 |
+| smart02 | 영어 | 92 |
+
+#### 🏷️ Badge (shields.io)
+
+```markdown
+<img src="https://img.shields.io/badge/github-smart--it-blue" />
+<img src="https://img.shields.io/badge/Android-3DDC84?style=flat-square&logo=Android&logoColor=white"/>
+```
+
+#### 🧾 스타일 옵션
+
+| 옵션 | 설명 |
+|------|------|
+| flat | 기본형 |
+| for-the-badge | 크고 굵은 스타일 |
+| social | GitHub 연동 스타일 |
+
+---
+
+> 💡 이번 주차는 Git 실습 마무리 + VSCode 설치 및 마크다운 활용법까지!  
+> 실제 GitHub에서 활용할 수 있는 예쁜 README 작성법까지 배웠습니다.
