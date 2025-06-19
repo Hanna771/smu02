@@ -1,0 +1,183 @@
+## 🗄️ 10주차 - Ubuntu에서 MySQL 설치 및 설정
+
+> MySQL 설치, 계정 생성, 외부 접속 설정, 대소문자 구분 설정까지  
+> 서버 구축과 데이터베이스 관리를 위한 핵심 실습 내용입니다.
+
+---
+
+### 🛠️ 1. MySQL 설치 및 실행 (Ubuntu 24.04 기준)
+
+```bash
+$ sudo apt update
+$ sudo apt install mysql-server
+$ sudo systemctl status mysql
+$ sudo netstat -tap | grep mysql   # 포트 확인
+```
+
+- **자동 실행 설정**
+```bash
+$ sudo systemctl enable mysql
+```
+
+- **외부 접속 허용 (3306 포트)**
+```bash
+$ sudo ufw allow mysql
+```
+
+---
+
+### 🔑 2. MySQL 접속 및 기본 설정
+
+- root 계정 접속 시 오류 해결:
+```bash
+$ sudo /usr/bin/mysql -u root -p
+```
+> ERROR 1698 (28000) 해결: mysql 실행 경로를 정확히 지정
+
+---
+
+### 👤 3. 사용자 및 권한 설정
+
+#### ① 사용자 확인 및 생성
+
+```sql
+mysql> SELECT User, Host FROM mysql.user;
+mysql> CREATE USER 'smart02'@'localhost' IDENTIFIED BY 'smart02';
+mysql> FLUSH PRIVILEGES;
+```
+
+#### ② 데이터베이스 생성
+
+```sql
+mysql> CREATE DATABASE smart02db;
+mysql> SHOW DATABASES;
+```
+
+#### ③ 권한 부여
+
+```sql
+mysql> GRANT ALL PRIVILEGES ON smart02db.* TO 'smart02'@'localhost';
+mysql> FLUSH PRIVILEGES;
+mysql> SHOW GRANTS FOR 'smart02'@'localhost';
+```
+
+---
+
+### 🔐 4. root 비밀번호 변경
+
+```sql
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY '변경할비밀번호';
+```
+
+---
+
+### 🌐 5. 외부 접속 사용자 등록
+
+```sql
+mysql> CREATE USER 'smart02'@'%' IDENTIFIED BY 'smart02';
+mysql> GRANT ALL PRIVILEGES ON smart02db.* TO 'smart02'@'192.168.111.%';
+mysql> FLUSH PRIVILEGES;
+```
+
+---
+
+### ⚙️ 6. 외부 접속 허용 설정 (MySQL 설정 파일 수정)
+
+```bash
+$ sudo apt install vim
+$ sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
+```
+
+- 아래 줄을 찾아 주석 처리 (또는 삭제)
+```
+#bind-address = 127.0.0.1
+```
+
+- 저장 후 MySQL 재시작
+```bash
+$ sudo service mysql restart
+```
+
+---
+
+## 🔁 10.2 - MySQL 8.x 초기 설정 요약
+
+### ✅ 보안 설정 요약
+
+- 비밀번호 없는 root 계정 → `ALTER USER`로 반드시 변경
+- smart02 사용자 생성 및 권한 부여
+- 외부 접속 허용 위해 `%`, `192.168.111.%` 사용 가능
+
+---
+
+## 🔡 10.3 - 대소문자 구분 설정 (lower_case_table_names)
+
+### 💡 왜 대소문자 구분 문제가 생길까?
+
+- Linux에서는 디렉토리/파일이 대소문자 구분됨
+- Table이 실제 디렉토리/파일로 생성되기 때문
+
+---
+
+### 🔍 확인 명령어
+
+```sql
+mysql> show variables like 'lower%';
+```
+
+| 변수명                    | 의미                           |
+|--------------------------|--------------------------------|
+| lower_case_file_system   | 파일 시스템이 대소문자 구분하는지 |
+| lower_case_table_names   | 테이블명 대소문자 설정 값         |
+
+---
+
+### ⚙️ 설정 방법 (`lower_case_table_names`)
+
+#### 옵션 의미
+| 값 | 설명 |
+|----|------|
+| 0  | 대소문자 구분함 (기본값, Linux) |
+| 1  | 모두 소문자로 변환 (구분 안 함) |
+| 2  | 생성 시 구분, 참조 시 소문자 (Mac OS 전용) |
+
+#### 설정 파일 수정
+
+```ini
+[mysqld]
+lower_case_table_names = 1
+```
+
+> 설정 후 반드시 MySQL **데이터 디렉토리 초기화 및 재시작** 필요
+
+---
+
+### 🔄 전체 재설정 예시 (MySQL 재설치 및 재초기화)
+
+```bash
+$ sudo service mysql stop
+$ sudo rm -rf /var/lib/mysql
+$ sudo mkdir /var/lib/mysql
+$ sudo chown mysql:mysql /var/lib/mysql
+$ sudo chmod 700 /var/lib/mysql
+```
+
+```bash
+$ sudo mysqld --defaults-file=/etc/mysql/my.cnf \
+  --initialize --lower_case_table_names=1 --user=mysql --console
+```
+
+```bash
+$ sudo service mysql start
+```
+
+- 이후 비밀번호 재설정
+```bash
+$ sudo mysql -u root -p
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY '새비번';
+```
+
+---
+
+> 💡 MySQL에서 Linux와 Windows의 차이를 이해하고  
+> 외부 접속 허용, 계정 관리, 대소문자 설정까지 할 수 있다면 실무 준비 끝!
