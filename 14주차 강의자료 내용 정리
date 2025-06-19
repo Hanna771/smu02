@@ -1,0 +1,98 @@
+## 🌐 14주차 - GitHub Pages 만들기 & 프로필 README 띄우기
+
+> GitHub의 웹사이트 호스팅 기능인 Pages를 이용해 나만의 웹사이트를 만들고,  
+> 내 GitHub 프로필 상단에 소개글(README)을 띄우는 실습입니다.
+
+---
+
+### 🏗️ 14.4 - GitHub Pages 만들기
+
+#### 🔹 GitHub Pages란?
+- GitHub 저장소에 HTML 파일을 업로드하면, **웹사이트처럼 서비스할 수 있게 해주는 기능**
+- 무료이고, 설정만 하면 바로 퍼블리싱 가능
+
+---
+
+#### 📦 GitHub Pages용 저장소 만들기
+
+1. GitHub 로그인 → 우측 상단 `+` 클릭 → `New repository`
+2. 저장소 이름은 **반드시** `사용자이름.github.io` 형태로!
+   - 예시: `hana1234.github.io`
+   - ⚠️ `.com` → ❌ / `.io` → ✅
+3. Public 체크
+4. README 초기화 여부는 상관 없음
+
+---
+
+#### ⚙️ GitHub Pages 활성화
+
+1. 생성된 repo → 상단 `Settings` 클릭
+2. 좌측 메뉴 아래로 스크롤 → `Pages` 찾기
+3. `Source` 항목에서 브랜치 선택 (`main` 등) → `Save`
+4. 주소 생성됨:  
+   ```
+   Your site is published at https://사용자이름.github.io
+   ```
+
+---
+
+#### 🌍 Welcome 페이지 만들기 (index.html)
+
+```html
+<!-- index.html 예시 -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>Welcome</title>
+</head>
+<body>
+  <h1>GitHub Page에 오신 걸 환영합니다!</h1>
+</body>
+</html>
+```
+
+> 위 파일을 만들어 저장소에 커밋하면, 웹사이트에서 확인 가능
+
+---
+
+#### 🧱 No Jekyll 설정 (.nojekyll 파일 만들기)
+
+- Jekyll은 기본적으로 GitHub Pages에서 Markdown을 HTML로 변환해주는 도구
+- 내가 직접 만든 HTML만 표시하고 싶다면 `.nojekyll` 파일 추가!
+
+```bash
+# GitHub 웹사이트에서 직접:
+[Add file] → Create new file → 이름: .nojekyll → 내용 비우고 Commit
+```
+
+---
+
+### 🧑‍💼 14.5 - GitHub 프로필에 README 띄우기
+
+#### 📘 조건
+
+- **GitHub 프로필 이름과 동일한 저장소 생성**
+  - 예: 사용자명이 `hana1234`이면 → 저장소 이름도 `hana1234`
+
+#### 📝 저장소 설정
+
+1. GitHub → `New repository`
+2. 이름: `내아이디/내아이디` 형태 (ex: `hana1234/hana1234`)
+3. 공개(Public)로 설정
+4. "Add a README file" 체크
+5. 생성 후, README.md 편집하면 → 프로필 상단에 자동 노출!
+
+---
+
+### ✨ 결과 예시
+
+- GitHub Pages 주소:  
+  👉 `https://hana1234.github.io`  
+- 프로필 README 표시:  
+  👉 GitHub 메인 프로필에 `README.md` 내용이 뜸
+
+---
+
+> ✅ 이번 주차는 GitHub를 웹사이트 호스팅 플랫폼으로 활용하는 방법과  
+> 자신의 프로필을 꾸밀 수 있는 멋진 README.md 활용법을 배웠습니다.
