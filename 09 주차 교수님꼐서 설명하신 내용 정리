@@ -1,0 +1,212 @@
+## 🐧 9주차 - Ubuntu Shell & Bash Script
+
+> 리눅스 쉘(Shell)은 사용자와 운영체제 사이의 인터페이스 역할을 하는 프로그램입니다.  
+> 특히 Bash는 리눅스에서 가장 널리 사용되는 쉘이며, 이를 활용한 **Shell Script 자동화**는 서버 관리의 핵심입니다.
+
+---
+
+### 📘 Shell의 개념과 종류
+
+- **Shell의 역할**: 사용자 명령어 해석기
+- **종류**
+  - `sh` (Bourne Shell)
+  - `csh` (C Shell, tcsh)
+  - `ksh` (Korn Shell)
+  - `bash` (Bourne Again Shell) ← *기본 Shell*
+
+```bash
+$ cat /etc/shells       # 사용 가능한 shell 목록
+$ echo $SHELL           # 현재 사용 중인 shell
+$ sudo chsh ubuntu      # 로그인 shell 변경
+```
+
+---
+
+### 📌 변수 및 환경변수
+
+- **일반 변수 선언**: `변수명=값` (띄어쓰기❌)
+- **출력**: `echo $변수명`
+- **삭제**: `unset 변수명`
+- **환경변수 등록**: `export 변수명=값`
+
+```bash
+$ fname=smu
+$ echo $fname
+$ export NAME=hana
+$ env                     # 전체 환경변수 보기
+```
+
+---
+
+### 💬 Quoting & Nesting Commands
+
+- **Quoting 종류**
+  - `\` : 특수문자 escape
+  - `"` : 대부분 escape, 단 `$`, `` ` `` 제외
+  - `'` : 모두 escape
+
+```bash
+$ echo "*"
+$ touch myfile{1..3}
+```
+
+- **명령어 치환 (Nesting)**
+```bash
+$ echo "Today is $(date)"
+$ echo "Today is `date`"
+```
+
+---
+
+### 🧪 Alias & Prompt 설정
+
+- **alias 등록**: `alias ll='ls -al'`
+- **삭제**: `unalias ll`
+- **프롬프트 설정**:
+```bash
+$ PS1='[\u@\h \W]\$ '
+```
+
+- `.bashrc` 수정으로 설정 영구화
+```bash
+$ vi ~/.bashrc
+alias c=clear
+```
+
+---
+
+### 🔁 리다이렉션 & 파이프라인
+
+- **리다이렉션**
+  - `>`: 덮어쓰기
+  - `>>`: 이어쓰기
+  - `2>`: 에러 출력 저장
+```bash
+$ ls a.txt > output.txt
+$ ls file1 file2 2> error.log
+```
+
+- **파이프라인**: `|` 로 명령어 연결
+```bash
+$ ls -l | wc -l
+$ cat /etc/passwd | cut -d: -f1 | sort | wc -l
+```
+
+---
+
+### 🧾 Shell Script 기본
+
+```bash
+#!/bin/bash
+
+echo "====== START ======"
+date +%Y-%m-%d
+echo "====== END ======"
+df -h /
+```
+
+- 저장 후 실행 권한 부여
+```bash
+$ chmod +x script.sh
+$ ./script.sh
+```
+
+---
+
+### 🧠 위치 매개변수(Positional Parameters)
+
+| 매개변수 | 의미                |
+|----------|---------------------|
+| `$0`     | 스크립트 파일명      |
+| `$1 ~ $9`| 명령어 인자 값       |
+| `$#`     | 인자의 개수          |
+| `$@`, `$*` | 모든 인자 리스트 |
+
+```bash
+$ ./myscript.sh red green blue
+```
+
+---
+
+### ⌨️ Input / Output
+
+```bash
+echo -n "Input name: "
+read name
+echo "Hello $name"
+```
+
+- `echo -e` : \n, \t 등 escape 문자 지원
+- `printf` : 포맷 기반 출력
+
+```bash
+$ printf "Name: %s \t Score: %d\n" hana 100
+```
+
+---
+
+### 🧩 조건문 (if / case)
+
+```bash
+if [ -e filename ]; then
+  echo "파일 있음"
+else
+  echo "파일 없음"
+fi
+```
+
+```bash
+case $input in
+  yes) echo "Restarting..." ;;
+  no) echo "Shutting down..." ;;
+  *) echo "Unknown" ;;
+esac
+```
+
+---
+
+### 🔁 반복문 (while / until / for)
+
+```bash
+# while loop
+while [ $i -le 5 ]; do
+  echo "Loop $i"
+  ((i++))
+done
+```
+
+```bash
+# for loop
+for f in *; do
+  echo $f
+done
+```
+
+---
+
+### 📦 Backup & Deploy Script 예제
+
+```bash
+#!/bin/bash
+
+APP_NAME=Project
+NOW=$(date +%Y%m%d)
+WWW=/home/test/www
+BAK_PATH=$WWW/${APP_NAME}_$NOW
+
+backup() {
+  mv $WWW/$APP_NAME $BAK_PATH
+}
+
+case $1 in
+  backup)
+    echo "Backing up..."
+    backup
+    ;;
+esac
+```
+
+---
+
+> 📚 실습 중심으로 Shell Script를 직접 작성하며, 반복문/조건문/백업 등 서버 운영의 자동화를 익혔습니다.
+
