@@ -243,3 +243,130 @@ $ git branch --merged        # 병합된 브랜치 목록
 $ git branch -d 브랜치명      # 병합된 브랜치 삭제
 $ git branch -D 브랜치명      # 병합 여부와 상관없이 강제 삭제
 ```
+## 🐧 7주차 - Ubuntu에서 Git 사용하기 & Git Branch 실습
+
+> Ubuntu 환경에서 Git을 설치하고 초기 설정부터 브랜치 실습까지 진행합니다.
+
+---
+
+### 📥 Git 설치 & 사용자 정보 설정
+
+```bash
+$ sudo apt update
+$ sudo apt install git
+
+$ git --version
+git version 2.25.1
+
+$ git config --global user.name "홍길동"
+$ git config --global user.email "hong@example.com"
+
+$ git config --list  # 설정 확인
+```
+
+---
+
+### 📁 Git 저장소 생성
+
+```bash
+$ mkdir git-test
+$ cd git-test
+$ git init
+```
+
+- 해당 폴더에 `.git` 디렉토리 생성됨 (로컬 저장소)
+- 한 폴더에는 `.git`은 하나만 존재해야 충돌 없음
+
+---
+
+### ✏️ First Commit (추가 & 저장)
+
+```bash
+$ touch README.md         # 파일 생성
+$ git add README.md       # 스테이지에 추가
+$ git commit -m "first commit"   # 커밋
+```
+
+> 전체 파일을 추가할 경우:  
+> `git add .` ← 점(점 중요!)
+
+---
+
+### 🔍 Git 상태 확인
+
+```bash
+$ git status   # 파일 상태 확인
+$ git diff     # 변경사항 비교
+$ git log      # 커밋 히스토리 보기
+```
+
+- **Untracked**: 아직 add하지 않은 새 파일  
+- **Tracked**: Git이 관리하는 파일  
+  - Unmodified / Modified / Staged
+
+---
+
+### 🚫 무시할 파일 설정 (.gitignore)
+
+```gitignore
+# 주석은 #
+*.a              # .a 파일 무시
+!lib.a           # lib.a는 예외
+/TODO            # 루트 디렉토리의 TODO 파일
+build/           # build 디렉토리 전체
+doc/*.txt        # doc/ 아래 txt 파일
+doc/**/*.txt     # 하위 모든 .txt
+```
+
+> 자동 생성기 사용:  
+> [https://www.toptal.com/developers/gitignore](https://www.toptal.com/developers/gitignore)
+
+---
+
+### 🌿 Git Branch 실습
+
+```bash
+$ git branch               # 브랜치 목록 확인
+$ git branch dev           # dev 브랜치 생성
+$ git checkout dev         # dev 브랜치로 전환
+$ git checkout -b feature  # 브랜치 생성 + 전환
+```
+
+---
+
+### 🔁 브랜치 병합
+
+```bash
+$ git checkout main
+$ git merge dev
+```
+
+- Fast-forward: 간단 병합
+- 3-way merge: 복잡한 변경 병합
+
+---
+
+### ⚠️ 병합 충돌 처리
+
+- 충돌 시 `<<<<<<<`, `=======`, `>>>>>>>` 표시됨  
+- 수동으로 수정 후 아래 명령어 수행
+
+```bash
+$ git add .
+$ git commit -m "충돌 해결 후 커밋"
+```
+
+---
+
+### 🧹 브랜치 삭제 & 정리
+
+```bash
+$ git branch --merged         # 병합된 브랜치 목록
+$ git branch -d dev           # dev 브랜치 삭제
+$ git branch -D feature       # 강제 삭제
+```
+
+---
+
+> ✅ 이번 주차는 Git을 Ubuntu에 설치하고 기본적인 저장소 생성부터  
+> 브랜치를 나누고 병합하는 전체 흐름을 실습해 보았습니다.
