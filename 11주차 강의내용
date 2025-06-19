@@ -1,0 +1,173 @@
+## 📘 11주차 - MySQL FOREIGN KEY & JOIN 실습
+
+> MySQL에서 데이터 무결성을 보장하는 외래키(Foreign Key) 설정과  
+> 다중 테이블 조인을 통한 데이터 추출 방법을 학습합니다.
+
+---
+
+### 🔗 11.1 - FOREIGN KEY 제약 조건
+
+#### ✅ FOREIGN KEY 문법
+
+```sql
+-- 테이블 생성 시 외래키 지정
+CREATE TABLE emp (
+  empId INT PRIMARY KEY,
+  empName VARCHAR(45),
+  deptId INT,
+  FOREIGN KEY (deptId) REFERENCES dept(deptId)
+);
+
+-- 기존 테이블에 외래키 추가
+ALTER TABLE emp
+ADD CONSTRAINT deptId_fk
+FOREIGN KEY (deptId)
+REFERENCES dept(deptId);
+```
+
+#### 🔁 ON DELETE / ON UPDATE 옵션
+
+| 옵션          | 설명                             |
+|---------------|----------------------------------|
+| CASCADE       | 삭제/변경 시 연쇄 적용            |
+| SET NULL      | NULL 값으로 변경됨                |
+| RESTRICT      | 참조 중이면 삭제/변경 불가         |
+| NO ACTION     | 아무 일도 하지 않음 (기본값)       |
+| SET DEFAULT   | 기본값으로 설정                   |
+
+```sql
+FOREIGN KEY (deptId)
+REFERENCES dept(deptId)
+ON DELETE RESTRICT
+ON UPDATE CASCADE;
+```
+
+---
+
+### 🧪 11.2 - FOREIGN KEY 실습 예제
+
+```sql
+CREATE TABLE dept (
+  deptId INT PRIMARY KEY,
+  deptName VARCHAR(45)
+);
+
+CREATE TABLE emp (
+  empId INT PRIMARY KEY,
+  empName VARCHAR(45),
+  deptId INT,
+  FOREIGN KEY (deptId)
+  REFERENCES dept(deptId)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE
+);
+```
+
+```sql
+-- 데이터 입력
+INSERT INTO dept VALUES (1, 'Marketing'), (2, 'Finance'), (3, 'Development');
+INSERT INTO emp VALUES
+  (1, 'ict01', 1),
+  (2, 'ict02', 3),
+  (3, 'ict03', 1),
+  (4, 'ict04', 3),
+  (5, 'ict05', 2);
+```
+
+---
+
+### 🔄 11.3 - dept-emp 실습
+
+```sql
+-- 직원 수 확인
+SELECT deptId, COUNT(*) AS 인원수
+FROM emp
+GROUP BY deptId;
+```
+
+```sql
+-- 부서명으로 직원 수 보기
+SELECT dept.deptName, COUNT(*) AS cnt
+FROM dept
+JOIN emp ON dept.deptId = emp.deptId
+GROUP BY dept.deptId;
+```
+
+```sql
+-- 특정 부서의 직원만 보기
+SELECT empName, deptName
+FROM dept
+JOIN emp ON dept.deptId = emp.deptId
+WHERE deptName = 'Marketing';
+```
+
+---
+
+### 🔁 11.4 - MySQL JOIN 문법 정리
+
+| JOIN 종류       | 설명                              |
+|----------------|-----------------------------------|
+| INNER JOIN      | 교집합                            |
+| LEFT OUTER JOIN | 왼쪽 테이블 기준, 없는 쪽은 NULL |
+| RIGHT OUTER JOIN| 오른쪽 테이블 기준               |
+| CROSS JOIN      | 데카르트 곱 (모든 조합)           |
+
+#### INNER JOIN
+
+```sql
+SELECT * FROM dept
+INNER JOIN emp ON dept.deptId = emp.deptId;
+```
+
+#### LEFT JOIN
+
+```sql
+SELECT * FROM dept
+LEFT JOIN emp ON dept.deptId = emp.deptId;
+```
+
+#### RIGHT JOIN
+
+```sql
+SELECT * FROM dept
+RIGHT JOIN emp ON dept.deptId = emp.deptId;
+```
+
+#### CROSS JOIN
+
+```sql
+SELECT * FROM members
+CROSS JOIN committees;
+```
+
+---
+
+### 🧪 11.5 - JOIN 실습 예제
+
+#### 기본 테이블
+
+```sql
+CREATE TABLE members (
+  member_id INT,
+  name VARCHAR(20)
+);
+
+CREATE TABLE committees (
+  committee_id INT,
+  committee_name VARCHAR(20)
+);
+```
+
+#### CROSS JOIN 예시
+
+```sql
+SELECT * FROM members
+CROSS JOIN committees;
+```
+
+- 총 결과 행 수 = members 수 × committees 수
+
+---
+
+> 📚 이번 주차에서는 외래키 설정, JOIN 문법, GROUP BY 활용 등  
+> 실무에서 자주 쓰이는 다중 테이블 연산을 연습했습니다.
